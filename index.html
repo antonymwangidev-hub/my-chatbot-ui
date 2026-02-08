@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Business Assistant</title>
+    <style>
+        /* This makes it look like a professional chat bubble */
+        body { font-family: sans-serif; background: #f4f7f6; display: flex; justify-content: center; padding: 50px; }
+        #chat-window { width: 400px; height: 500px; background: white; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
+        #messages { flex: 1; padding: 20px; overflow-y: auto; }
+        .msg { margin-bottom: 15px; padding: 10px; border-radius: 10px; max-width: 80%; }
+        .user { background: #007bff; color: white; align-self: flex-end; margin-left: auto; }
+        .bot { background: #e9ecef; color: #333; }
+        #input-area { padding: 20px; border-top: 1px solid #eee; display: flex; }
+        input { flex: 1; border: 1px solid #ddd; padding: 10px; border-radius: 5px; outline: none; }
+        button { background: #007bff; color: white; border: none; padding: 10px 20px; margin-left: 10px; border-radius: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div id="chat-window">
+        <div id="messages"></div>
+        <div id="input-area">
+            <input type="text" id="user-input" placeholder="Ask about my business...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        async function sendMessage() {
+            const input = document.getElementById('user-input');
+            const msgDiv = document.getElementById('messages');
+            if(!input.value) return;
+
+            // 1. Show User Message
+            msgDiv.innerHTML += `<div class="msg user">${input.value}</div>`;
+            
+            // 2. Talk to YOUR RENDER BACKEND
+            const response = await fetch(https://ai-business-chatbot-e875.onrender.com, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: input.value })
+            });
+            
+            const data = await response.json();
+            
+            // 3. Show Bot Message
+            msgDiv.innerHTML += `<div class="msg bot">${data.message}</div>`;
+            input.value = '';
+            msgDiv.scrollTop = msgDiv.scrollHeight;
+        }
+    </script>
+</body>
+</html>
